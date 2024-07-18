@@ -1,0 +1,13 @@
+{
+  "name": "fastify-autoload",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:kunal097/fastify-autoload.git",
+  "author": "Kunal Sharma",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.28.1",
+    "fastify-plugin": "^4.5.1"
+  },
+  "devDependencies": {}
+}
