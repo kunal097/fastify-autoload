@@ -4,6 +4,8 @@ const fp = require("fastify-plugin");
 
 const supported_files = ["json"];
 
+let logger = null;
+
 const read_file = async (filePath) => {
   const data = await readFile(filePath, {
     encoding: "utf-8",
@@ -12,38 +14,40 @@ const read_file = async (filePath) => {
 };
 
 const main = async (options) => {
+  let result = [];
   try {
-    const files = await readdir(`${__dirname}/${options.dir}`);
+    const files = await readdir(`${options.dir}`);
 
-    let result = files.map(async (file) => {
+    result = files.map(async (file) => {
       const [fileName, ext] = file.toLowerCase().split(".");
 
       try {
         if (fileName && supported_files.includes(ext)) {
           return {
             path: `${options.dir}/${fileName}`,
-            data: await read_file(`${__dirname}/${options.dir}/${file}`),
+            data: await read_file(`${options.dir}/${file}`),
           };
         } else {
-          console.warn(`Unsupported file found : ${file}`);
+          logger.warn(`Unsupported file found : ${file}`);
         }
       } catch (err) {
-        console.warn(`File ignored : ${file}`);
+        logger.warn(`Could not parse : ${file}`);
       }
     });
 
     result = await Promise.all(result);
 
     result = result.filter((value) => value);
-
-    return result;
   } catch (_) {
-    console.warn(`Ignored directory : ${options.dir}`);
+    logger.warn(`Directory not found : ${options.dir}`);
   }
+  return result;
 };
 
 module.exports = fp(async function (fastify, opts) {
+  logger = fastify.log;
   const result = await main(opts);
+
   result.map(({ path, data }) =>
     fastify.get(`/${path}`, (_, reply) => {
       reply.send(data);
