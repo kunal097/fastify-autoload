@@ -1,13 +1,25 @@
 {
   "name": "@pybot/fastify-autoload",
-  "version": "0.0.1",
-  "main": "index.js",
+  "version": "0.0.2",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "repository": "git@github.com:kunal097/fastify-autoload.git",
   "author": "Kunal Sharma",
   "license": "MIT",
-  "dependencies": {
-    "fastify": "^4.28.1",
-    "fastify-plugin": "^4.5.1"
+  "dependencies": {},
+  "scripts": {
+    "build": "tsup"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^20.14.11",
+    "fastify": "^4.28.1",
+    "fastify-plugin": "^4.5.1",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.2.0",
+    "typescript": "^5.5.3"
+  }
 }
