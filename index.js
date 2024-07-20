@@ -1,10 +1,6 @@
 const { readFile, readdir } = require("fs/promises");
-const { URL } = require("url");
-const fp = require("fastify-plugin");
 
 const supported_files = ["json"];
-
-let logger = null;
 
 const read_file = async (filePath) => {
   const data = await readFile(filePath, {
@@ -13,7 +9,7 @@ const read_file = async (filePath) => {
   return JSON.parse(data);
 };
 
-const main = async (options) => {
+const autoLoad = async (fastify, options) => {
   let result = [];
   try {
     const files = await readdir(`${options.dir}`);
@@ -28,29 +24,27 @@ const main = async (options) => {
             data: await read_file(`${options.dir}/${file}`),
           };
         } else {
-          logger.warn(`Unsupported file found : ${file}`);
+          fastify.log.warn(`Unsupported file found : ${file}`);
         }
       } catch (err) {
-        logger.warn(`Could not parse : ${file}`);
+        fastify.log.warn(`Could not parse : ${file}`);
       }
     });
 
     result = await Promise.all(result);
 
     result = result.filter((value) => value);
+
+    result.map(({ path, data }) =>
+      fastify.get(`/${path}`, (_, reply) => {
+        reply.send(data);
+      }),
+    );
   } catch (_) {
-    logger.warn(`Directory not found : ${options.dir}`);
+    fastify.log.warn(`Directory not found : ${options.dir}`);
   }
   return result;
 };
 
-module.exports = fp(async function (fastify, opts) {
-  logger = fastify.log;
-  const result = await main(opts);
-
-  result.map(({ path, data }) =>
-    fastify.get(`/${path}`, (_, reply) => {
-      reply.send(data);
-    }),
-  );
-});
+module.exports = autoLoad;
+module.exports.autoLoad = autoLoad;
