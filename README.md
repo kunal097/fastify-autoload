@@ -10,8 +10,6 @@ npm i @pybot/fastify-autoload
 
 ## Example
 
-Fastify server that automatically loads in all plugins from the `plugins` directory:
-
 ```js
 const fastify = require('fastify')
 const autoload = require('@pybot/fastify-autoload')
@@ -36,5 +34,5 @@ Folder structure:
 ├── package.json
 └── src
     └── index.js
-    
+
 ```
