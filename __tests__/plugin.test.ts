@@ -40,7 +40,7 @@ describe("Autoload plugin test suit for existing dir", () => {
 
 describe("Autoload plugin test suit for multiple directory", () => {
   const app = build({
-    dir: ["__tests__/files", "__tests__/config"],
+    dir: ["__tests__/files", "__tests__/server-config"],
   });
 
   test("Check for server route from files directory", async () => {
@@ -53,7 +53,7 @@ describe("Autoload plugin test suit for multiple directory", () => {
 
   test("Check for server route from config directory", async () => {
     const res = await app.inject({
-      url: "__tests__/config/server",
+      url: "__tests__/server-config/server",
     });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({
@@ -64,7 +64,7 @@ describe("Autoload plugin test suit for multiple directory", () => {
 
   test("Check for invalid route from files directroy", async () => {
     const res = await app.inject({
-      url: "api/config/__tests__/files/invalid",
+      url: "api/server-config/__tests__/files/invalid",
     });
 
     expect(res.statusCode).toBe(404);
@@ -72,7 +72,7 @@ describe("Autoload plugin test suit for multiple directory", () => {
 
   test("Check for invalid route from config directroy", async () => {
     const res = await app.inject({
-      url: "api/config/__tests__/config/invalid",
+      url: "api/server-config/__tests__/server-config/invalid",
     });
 
     expect(res.statusCode).toBe(404);
