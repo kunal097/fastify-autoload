@@ -1,4 +1,4 @@
-name: Jest workflow
+name: Test
 on: pull_request
 jobs:
   run-testcases:
