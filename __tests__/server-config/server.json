@@ -1,0 +1,4 @@
+{
+    "name": "server config from __tests__/config",
+    "env": "test"
+}
