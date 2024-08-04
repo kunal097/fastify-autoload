@@ -1,8 +1,10 @@
 import Fastify from "fastify";
 import autoLoad from "../src";
 
-const build = (options: { dir: string; prefix?: string }) => {
-  const app = Fastify();
+const log = require("pino")({ level: "fatal" });
+
+const build = (options: { dir: string | string[] }) => {
+  const app = Fastify({ logger: log });
 
   beforeAll(async () => {
     void app.register(autoLoad, options);
@@ -38,7 +40,6 @@ describe("Autoload plugin test suit for existing dir", () => {
 
 describe("Autoload plugin test suit for multiple directory", () => {
   const app = build({
-    //@ts-ignore
     dir: ["__tests__/files", "__tests__/config"],
   });
 
@@ -82,6 +83,18 @@ describe("Autoload plugin test suit for non-existent directory", () => {
   const app = build({
     dir: "__tests__/non-existent",
   });
+  test("Check for server route", async () => {
+    const res = await app.inject({
+      url: "__tests__/files/server",
+    });
+
+    expect(res.statusCode).toBe(404);
+  });
+});
+
+describe("Autoload plugin test suit for invalid dir option", () => {
+  //@ts-ignore
+  const app = build({});
   test("Check for server route", async () => {
     const res = await app.inject({
       url: "__tests__/files/server",
