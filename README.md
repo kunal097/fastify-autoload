@@ -40,3 +40,37 @@ Folder structure:
     └── index.js
 
 ```
+
+
+Now we can specify multiple directories as well.
+
+
+```js
+const fastify = require('fastify')
+const autoload = require('@pybot/fastify-autoload')
+
+const app = fastify({logger: true})
+
+app.register(autoload, {
+  dir: ['server-config', 'files']
+})
+
+app.listen({ port: 3000 })
+```
+
+Folder structure:
+
+```
+├── server-config
+│   ├── api-server.json
+│   ├── unsupported.txt
+│   ├── trace.json
+├── files
+│   ├── invalid.json
+│   ├── unsupported.txt
+│   ├── server.json
+├── package.json
+└── src
+    └── index.js
+
+```
